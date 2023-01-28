@@ -14,7 +14,12 @@ func Start() {
 	var sync bool
 	flag.BoolVar(&sync, "sync", false, "sync local repos")
 
+	var ebuildName string
+	flag.StringVar(&ebuildName, "R", "", "search for an ebuild")
+
 	flag.Parse()
+
+	////
 
 	if meow {
 		fmt.Println("meow meow meow")
@@ -25,5 +30,13 @@ func Start() {
 		if err != nil {
 			panic(err)
 		}
+	}
+
+	if ebuildName != "" {
+		err := utils.LoadLocalOverlays()
+		if err != nil {
+			panic("Local repos are not synced, run with --sync to sync them")
+		}
+		utils.FindEbuild(ebuildName)
 	}
 }

@@ -1,7 +1,10 @@
 package main
 
-import "github.com/mbaraa/eloi/cmd"
+import (
+	"github.com/mbaraa/eloi/cmd"
+)
 
 func main() {
+
 	cmd.Start()
 }
