@@ -11,12 +11,18 @@ func Start() {
 	var meow bool
 	flag.BoolVar(&meow, "meow", false, "meow meow meow")
 
-	var sync bool
-	flag.BoolVar(&sync, "sync", false, "sync local repos")
+	var download bool
+	flag.BoolVar(&download, "download", false, "download overlays repos cache")
 
 	var ebuildName string
 	flag.StringVar(&ebuildName, "S", "", "search for an ebuild")
 	flag.StringVar(&ebuildName, "search", "", "search for an ebuild")
+
+	var overlayName string
+	flag.StringVar(&overlayName, "enable", "", "add a specific repository")
+
+	var sync bool
+	flag.BoolVar(&sync, "sync", false, "sync portage repos")
 
 	flag.Parse()
 
@@ -26,8 +32,22 @@ func Start() {
 		fmt.Println("meow meow meow")
 	}
 
+	if len(overlayName) != 0 {
+		err := utils.AddOverlayRepo(overlayName)
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	if sync {
 		err := utils.Sync()
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	if download {
+		err := utils.DownloadReposCache()
 		if err != nil {
 			panic(err)
 		}
