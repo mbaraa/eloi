@@ -15,7 +15,8 @@ func Start() {
 	flag.BoolVar(&sync, "sync", false, "sync local repos")
 
 	var ebuildName string
-	flag.StringVar(&ebuildName, "R", "", "search for an ebuild")
+	flag.StringVar(&ebuildName, "S", "", "search for an ebuild")
+	flag.StringVar(&ebuildName, "search", "", "search for an ebuild")
 
 	flag.Parse()
 
