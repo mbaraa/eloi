@@ -14,18 +14,20 @@ Eloi's [server](https://github.com/mbaraa/eloi-server) just scrapes over Zugania
 
 ## Usage:
 
-#### Update local repos
+#### Update local repos' cache
 
 local repos are stored in `/var/cache/eloi`
 
 ```bash
-eloi --sync
+eloi --download
 ```
 
 #### Find an Ebuild
 
+using `-S` or `--search`
+
 ```bash
-eloi -R pulseaudio-equalizer
+eloi -S pulseaudio-equalizer
 ```
 
 This will list all ebuild that has _pulseaudio-equalizer_ in their name, with some other details, like version, overlay name, use flags, licens, ...
@@ -42,4 +44,10 @@ or by installing a package from a repo that's not enabled in your system
 
 ```bash
 eloi -qav pulseaudio-equalizer-ladspa
+```
+
+#### Sync portage repos
+
+```bash
+eloi --sync
 ```
