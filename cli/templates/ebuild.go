@@ -33,7 +33,7 @@ func EbuildTemplate(ebuildWithVersions map[string]models.Ebuild) string {
 
 	versionsStr := new(strings.Builder) // overlayN(versionN...)...
 	for name, versions := range providers {
-		versionsStr.WriteString(cli.ColorLightyellow.StringColored(name[len("Overlay: "):] + "("))
+		versionsStr.WriteString(cli.ColorLightyellow.StringColored(name + "("))
 		for i, version := range versions {
 			versionsStr.WriteString(cli.ColorLightyellow.StringColored(version))
 			if i < len(versions)-1 {
