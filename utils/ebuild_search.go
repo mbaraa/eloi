@@ -52,17 +52,12 @@ func PromptSelectPackage(pkgs []PackageEntity) {
 	selection := 0
 	fmt.Scan(&selection)
 
-	if selection-1 > len(pkgs) {
+	if selection-1 > len(pkgs) || selection-1 < 0 {
 		fmt.Println("there is nothing to do")
 	} else {
-		err := InstallPackage(pkgs[selection-1].FullName)
+		err := InstallPackage(globals.Ebuilds[pkgs[selection-1].FullName])
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %s", err.Error())
 		}
 	}
-}
-
-func InstallPackage(ebuildName string) error {
-	fmt.Printf("%+v\n", globals.Ebuilds[ebuildName])
-	return nil
 }

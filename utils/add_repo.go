@@ -33,7 +33,7 @@ func AddOverlayRepo(name string) error {
 		return err
 	}
 
-	return nil
+	return Sync(name)
 }
 
 func getRepoString(overlay models.Overlay) string {
