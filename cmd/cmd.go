@@ -33,6 +33,7 @@ func Start() {
 	}
 
 	if len(overlayName) != 0 {
+		utils.AssertRoot()
 		err := utils.AddOverlayRepo(overlayName)
 		if err != nil {
 			panic(err)
@@ -40,6 +41,7 @@ func Start() {
 	}
 
 	if sync {
+		utils.AssertRoot()
 		err := utils.Sync()
 		if err != nil {
 			panic(err)
@@ -47,6 +49,7 @@ func Start() {
 	}
 
 	if download {
+		utils.AssertRoot()
 		err := utils.DownloadReposCache()
 		if err != nil {
 			panic(err)
