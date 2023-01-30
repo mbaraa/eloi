@@ -43,7 +43,7 @@ func EbuildTemplate(ebuildWithVersions map[string]models.Ebuild) string {
 		versionsStr.WriteString(cli.ColorLightyellow.StringColored(") "))
 	}
 
-	fmt.Fprintf(sb, "%s %s/%s\n", cli.ColorLightgreen.StringColored("*"), groupName, cli.ColorBold.StringColored(name))
+	fmt.Fprintf(sb, "%s/%s\n", cli.ColorLightgreen.StringColored(groupName), cli.ColorBold.StringColored(name))
 	fmt.Fprintf(sb, "\t%s %s\n", cli.ColorLightgreen.StringColored("Available versions:"), versionsStr.String())
 	if len(license) != 0 {
 		fmt.Fprintf(sb, "\t%s %s\n", cli.ColorLightgreen.StringColored("License:"), license)
