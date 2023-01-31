@@ -61,12 +61,16 @@ func InstallPackage(ebuild map[string]*models.Ebuild) error {
 }
 
 func installPackage(ebuild *models.Ebuild) error {
-	if !IsRepoEnabled(ebuild.OverlayName) {
-		err := AddOverlayRepo(ebuild.OverlayName)
-		if err != nil {
-			return err
-		}
+	err := AddOverlayRepo(ebuild.OverlayName)
+	if err != nil {
+		return err
 	}
+
+	err = AcceptPackageLicense(*ebuild)
+	if err != nil {
+		return err
+	}
+
 	// TODO
 	// add license and flags enablers
 

@@ -13,6 +13,10 @@ import (
 )
 
 func AddOverlayRepo(name string) error {
+	if IsRepoEnabled(name) {
+		return nil
+	}
+
 	resp, err := http.Get(fmt.Sprintf("%s/overlays/single?name=%s", config.BackendAddress(), name))
 	if err != nil {
 		return err
@@ -26,8 +30,6 @@ func AddOverlayRepo(name string) error {
 
 	_ = os.Mkdir(globals.ReposDirectory, 0755)
 
-	// TODO
-	// fix repeated repos
 	err = createReposFile(getRepoString(overlay))
 	if err != nil {
 		return err
