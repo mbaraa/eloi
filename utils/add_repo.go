@@ -43,10 +43,9 @@ func getRepoString(overlay models.Overlay) string {
 
 	fmt.Fprintf(sb, "[%s]\n", overlay.Name)
 	fmt.Fprintf(sb, "location = /var/db/repos/%s\n", overlay.Name)
-	// TODO
-	// get sync type from overlay
-	fmt.Fprintln(sb, "sync-type = git")
-	fmt.Fprintf(sb, "sync-uri = %s\n\n", overlay.Homepage)
+	source := overlay.Source[0]
+	fmt.Fprintf(sb, "sync-type = %s\n", source.Type)
+	fmt.Fprintf(sb, "sync-uri = %s\n\n", source.Link)
 
 	return sb.String()
 }
