@@ -46,6 +46,10 @@ func FindEbuild(name string) {
 }
 
 func PromptSelectPackage(pkgs []PackageEntity) {
+	if len(pkgs) == 0 {
+		fmt.Fprintln(os.Stderr, "no packages were found!")
+		return
+	}
 	prompt := cli.ColorGreen.StringColored("==>")
 	fmt.Printf("%s Select a package to install\n%s ", prompt, prompt)
 	selection := 0
