@@ -24,6 +24,16 @@ func FindEbuild(name string) {
 		}
 	}
 
+	dubs := make(map[string]bool)
+	for _, matchingEbuild := range allMatchingEbuilds {
+		dubs[matchingEbuild] = true
+	}
+
+	allMatchingEbuilds = make([]string, 0)
+	for name := range dubs {
+		allMatchingEbuilds = append(allMatchingEbuilds, name)
+	}
+
 	ebuildsToDisplay := make([]PackageEntity, 0)
 
 	for _, ebuild := range allMatchingEbuilds {
