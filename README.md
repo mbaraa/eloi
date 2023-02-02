@@ -8,9 +8,22 @@ Eloi's [server](https://github.com/mbaraa/eloi-server) just scrapes over Zugania
 
 ## Features:
 
-- Search for an ebuild package
+- Find and install an ebuild package from any overlay
 - Enable ebuild overlays
-- more in the futire...
+- more in the future...
+
+## Installation:
+
+### Using Portage
+
+1. Add my [overlay](https://github.com/mbaraa/mbaraa-overlay) 🥰
+2. Install `app-portage/eloi` using emerge
+
+### Using Go's installer
+
+```bash
+go install github.com/mbaraa/eloi@latest
+```
 
 ## Usage:
 
