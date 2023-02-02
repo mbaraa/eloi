@@ -19,10 +19,9 @@ func FindEbuild(name string) {
 	allMatchingEbuilds := make([]string, 0)
 
 	for _name := range globals.Ebuilds {
-		if strings.Contains(_name, name) {
-			allMatchingEbuilds = append(allMatchingEbuilds, globals.EbuildsWithNamesOnly[_name[strings.Index(_name, "/")+1:]]...)
+		if strings.Contains(strings.ToLower(_name), strings.ToLower(name)) {
+			allMatchingEbuilds = append(allMatchingEbuilds, globals.EbuildsWithNamesOnly[strings.ToLower(_name[strings.Index(_name, "/")+1:])]...)
 		}
-		//        globals.EbuildsWithNamesOnly[name]
 	}
 
 	ebuildsToDisplay := make([]PackageEntity, 0)

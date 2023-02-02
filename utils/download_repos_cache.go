@@ -112,6 +112,13 @@ func loadLocalOverlays() error {
 		return err
 	}
 
+	for name, ebuild := range globals.EbuildsWithNamesOnly {
+		if name != strings.ToLower(name) {
+			globals.EbuildsWithNamesOnly[strings.ToLower(name)] = ebuild
+			delete(globals.EbuildsWithNamesOnly, name)
+		}
+	}
+
 	return nil
 }
 
