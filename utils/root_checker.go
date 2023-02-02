@@ -1,11 +1,7 @@
 package utils
 
 import (
-	"fmt"
-	"os"
 	"os/user"
-
-	"github.com/mbaraa/eloi/cli"
 )
 
 func IsRoot() bool {
@@ -15,7 +11,6 @@ func IsRoot() bool {
 
 func AssertRoot() {
 	if !IsRoot() {
-		_, _ = fmt.Fprintln(os.Stderr, cli.ColorRed.StringColored("this action requires superuser access..."))
-		os.Exit(1)
+		Exit("this action requires superuser access...")
 	}
 }

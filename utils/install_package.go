@@ -61,6 +61,7 @@ func InstallPackage(ebuild map[string]*models.Ebuild) error {
 }
 
 func installPackage(ebuild *models.Ebuild) error {
+	AssertRoot()
 	err := AddOverlayRepo(ebuild.OverlayName)
 	if err != nil {
 		return err
