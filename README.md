@@ -43,7 +43,7 @@ using `-S` or `--search`
 eloi -S pulseaudio-equalizer
 ```
 
-This will list all ebuild that has _pulseaudio-equalizer_ in their name, with some other details, like version, overlay name, use flags, licens, ...
+This will list all ebuild that has _pulseaudio-equalizer_ in their name, with some other details, like version, overlay name, use flags, license, ...
 
 #### Enable an Overlay repository
 
