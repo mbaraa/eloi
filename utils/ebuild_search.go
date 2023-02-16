@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mbaraa/eloi/cli"
+	"github.com/mbaraa/eloi/cli/cfmt"
 	"github.com/mbaraa/eloi/cli/templates"
 	"github.com/mbaraa/eloi/globals"
 	"github.com/mbaraa/eloi/models"
@@ -49,7 +49,7 @@ func FindEbuild(name string) {
 	}
 
 	for i, ebuild := range ebuildsToDisplay {
-		fmt.Printf("(%s) %s\n", cli.ColorPurple.StringColored(fmt.Sprint(i+1)), ebuild.Display)
+		fmt.Printf("(%s) %s\n", cfmt.Magenta().Sprint(i+1), ebuild.Display)
 	}
 
 	PromptSelectPackage(ebuildsToDisplay)
@@ -60,7 +60,7 @@ func PromptSelectPackage(pkgs []PackageEntity) {
 		fmt.Fprintln(os.Stderr, "no packages were found!")
 		return
 	}
-	prompt := cli.ColorGreen.StringColored("==>")
+	prompt := cfmt.Green().Sprint("==>")
 	fmt.Printf("%s Select a package to install\n%s ", prompt, prompt)
 	selection := 0
 	fmt.Scan(&selection)

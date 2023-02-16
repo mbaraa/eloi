@@ -15,8 +15,15 @@ type printer interface {
 	Fprintln(w io.Writer, args ...any) (n int, err error)
 }
 
+type stringPrinter interface {
+	Sprintf(format string, args ...any) string
+	Sprint(args ...any) string
+	Sprintln(args ...any) string
+}
+
 type colorChooser interface {
 	printer
+	stringPrinter
 	black() stylerBackgroundSetter
 	red() stylerBackgroundSetter
 	green() stylerBackgroundSetter
@@ -29,6 +36,7 @@ type colorChooser interface {
 
 type textBackground interface {
 	printer
+	stringPrinter
 	BlackBG() textStyler
 	RedBG() textStyler
 	GreenBG() textStyler
@@ -41,6 +49,7 @@ type textBackground interface {
 
 type textStyler interface {
 	printer
+	stringPrinter
 	Underline() stylerBackgroundSetter
 	Inverse() stylerBackgroundSetter
 	Reset() stylerBackgroundSetter
@@ -108,6 +117,18 @@ func (c *colorPrinter) Fprint(w io.Writer, args ...any) (n int, err error) {
 
 func (c *colorPrinter) Fprintln(w io.Writer, args ...any) (n int, err error) {
 	return fmt.Fprintln(w, c.prepareSettings(fmt.Sprint(args...)))
+}
+
+func (c *colorPrinter) Sprintf(format string, args ...any) string {
+	return fmt.Sprintf(c.prepareSettings(format), args...)
+}
+
+func (c *colorPrinter) Sprint(args ...any) string {
+	return fmt.Sprint(c.prepareSettings(fmt.Sprint(args...)))
+}
+
+func (c *colorPrinter) Sprintln(args ...any) string {
+	return fmt.Sprintln(c.prepareSettings(fmt.Sprint(args...)))
 }
 
 func (c *colorPrinter) prepareSettings(text string) string {

@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/mbaraa/eloi/cli"
+	"github.com/mbaraa/eloi/cli/cfmt"
 	"github.com/mbaraa/eloi/globals"
 	"github.com/mbaraa/eloi/models"
 )
@@ -18,7 +18,7 @@ func InstallPackage(ebuild map[string]*models.Ebuild) error {
 	for _, details := range ebuild {
 		name, group = details.Name, details.GroupName
 		versions = append(versions, PackageEntity{
-			Display:  fmt.Sprintf("%s::%s", cli.ColorYellow.StringColored(details.Version), cli.ColorGreen.StringColored(details.OverlayName)),
+			Display:  fmt.Sprintf("%s::%s", cfmt.Yellow().Sprint(details.Version), cfmt.Green().Sprint(details.OverlayName)),
 			FullName: fmt.Sprintf("%s#%s", details.Version, details.OverlayName),
 		})
 	}
@@ -27,12 +27,12 @@ func InstallPackage(ebuild map[string]*models.Ebuild) error {
 
 	if len(ebuild) > 1 {
 	selectVersion:
-		fmt.Printf("\nthere are %s versions available of the package %s\n", cli.ColorYellow.StringColored(fmt.Sprint(len(ebuild))), cli.ColorGreen.StringColored(group+"/"+name))
+		fmt.Printf("\nthere are %s versions available of the package %s\n", cfmt.Yellow().Sprint(len(ebuild)), cfmt.Green().Sprint(group+"/"+name))
 		for i, version := range versions {
-			fmt.Printf("(%s) %s\n", cli.ColorPurple.StringColored(fmt.Sprint(i+1)), version.Display)
+			fmt.Printf("(%s) %s\n", cfmt.Magenta().Sprint(i+1), version.Display)
 		}
 
-		prompt := cli.ColorGreen.StringColored("==>")
+		prompt := cfmt.Green().Sprint("==>")
 		fmt.Printf("%s Select a version to install\n%s ", prompt, prompt)
 		selection := 0
 		fmt.Scan(&selection)

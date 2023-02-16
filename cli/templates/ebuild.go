@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mbaraa/eloi/cli"
+	"github.com/mbaraa/eloi/cli/cfmt"
 	"github.com/mbaraa/eloi/models"
 )
 
@@ -33,20 +33,20 @@ func EbuildTemplate(ebuildWithVersions map[string]models.Ebuild) string {
 
 	versionsStr := new(strings.Builder) // overlayN(versionN...)...
 	for name, versions := range providers {
-		versionsStr.WriteString(cli.ColorLightyellow.StringColored(name + "("))
+		cfmt.Yellow().Fprint(versionsStr, name+"(")
 		for i, version := range versions {
-			versionsStr.WriteString(cli.ColorLightyellow.StringColored(version))
+			cfmt.Yellow().Fprint(versionsStr, version)
 			if i < len(versions)-1 {
 				versionsStr.WriteString(" ")
 			}
 		}
-		versionsStr.WriteString(cli.ColorLightyellow.StringColored(") "))
+		cfmt.Yellow().Fprint(versionsStr, ") ")
 	}
 
-	fmt.Fprintf(sb, "%s/%s\n", cli.ColorLightgreen.StringColored(groupName), cli.ColorBold.StringColored(name))
-	fmt.Fprintf(sb, "\t%s %s\n", cli.ColorLightgreen.StringColored("Available versions:"), versionsStr.String())
+	fmt.Fprintf(sb, "%s/%s\n", cfmt.Green().Sprint(groupName), cfmt.Bold().Sprint(name))
+	fmt.Fprintf(sb, "\t%s %s\n", cfmt.Green().Sprint("Available versions:"), versionsStr.String())
 	if len(license) != 0 {
-		fmt.Fprintf(sb, "\t%s %s\n", cli.ColorLightgreen.StringColored("License:"), license)
+		fmt.Fprintf(sb, "\t%s %s\n", cfmt.Green().Sprint("License:"), license)
 	}
 	return sb.String()
 }
