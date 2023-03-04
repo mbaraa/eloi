@@ -17,8 +17,6 @@ const (
         download overlays repos cache
   -enable string
         add a specific repository
-  -meow
-        meow meow meow
   -sync string
         sync portage repos`
 )
