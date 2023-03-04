@@ -11,21 +11,19 @@ import (
 const (
 	usageStr = `Usage of Eloi:
   -S string
-  -search string
+  --search string
         find an ebuild to install
-  -download
+  --download
         download overlays repos cache
-  -enable string
-        add a specific repository
-  -sync string
-        sync portage repos`
+  --enable string
+        add a specific repository`
 )
 
 var argsActions = map[string]actions.ActionType{
-	"-download": actions.DownloadReposCacheActionType,
-	"-S":        actions.EbuildSearchActionType,
-	"-search":   actions.EbuildSearchActionType,
-	"-enable":   actions.EnableRepoActionType,
+	"--download": actions.DownloadReposCacheActionType,
+	"-S":         actions.EbuildSearchActionType,
+	"--search":   actions.EbuildSearchActionType,
+	"--enable":   actions.EnableRepoActionType,
 }
 
 func Start() {
