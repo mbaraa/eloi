@@ -11,10 +11,12 @@ import (
 	"github.com/mbaraa/eloi/globals"
 )
 
+var _ Action = new(DownloadReposCacheAction)
+
 type DownloadReposCacheAction struct {
 }
 
-func (d *DownloadReposCacheAction) Exec(output io.Writer, _ ...string) error {
+func (d *DownloadReposCacheAction) Exec(output io.Writer, _ ...any) error {
 	_, err := output.Write([]byte("Synchronizing overlays locally...\n"))
 	if err != nil {
 		return err
