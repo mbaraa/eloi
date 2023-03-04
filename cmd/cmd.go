@@ -27,6 +27,7 @@ var argsActions = map[string]actions.ActionType{
 	"-download": actions.DownloadReposCacheActionType,
 	"-S":        actions.EbuildSearchActionType,
 	"-search":   actions.EbuildSearchActionType,
+	"-enable":   actions.EnableRepoActionType,
 }
 
 func Start() {

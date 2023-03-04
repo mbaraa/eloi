@@ -21,6 +21,7 @@ type ActionType int
 const (
 	DownloadReposCacheActionType ActionType = iota + 1
 	EbuildSearchActionType
+	EnableRepoActionType
 )
 
 func GetActionFactory(at ActionType) Action {
@@ -29,6 +30,8 @@ func GetActionFactory(at ActionType) Action {
 		return new(DownloadReposCacheAction)
 	case EbuildSearchActionType:
 		return new(EbuildSearchAction)
+	case EnableRepoActionType:
+		return new(EnableRepoAction)
 	default:
 		return nil
 	}

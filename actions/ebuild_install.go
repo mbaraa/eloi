@@ -121,7 +121,7 @@ func (i *EbuildInstallAction) listEbuildsForInstallation(ebuild map[string]*mode
 }
 
 func (i *EbuildInstallAction) installEbuild(ebuild *models.Ebuild) error {
-	err := AddOverlayRepo(ebuild.OverlayName)
+	err := new(EnableRepoAction).Exec(i.output, ebuild.OverlayName)
 	if err != nil {
 		return err
 	}
