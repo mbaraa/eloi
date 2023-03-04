@@ -11,21 +11,22 @@ import (
 const (
 	usageStr = `Usage of Eloi:
   -S string
-        find ebuild to install
+  -search string
+        find an ebuild to install
   -download
         download overlays repos cache
   -enable string
         add a specific repository
   -meow
         meow meow meow
-  -search string
-        find ebuild to install
   -sync string
         sync portage repos`
 )
 
 var argsActions = map[string]actions.ActionType{
 	"-download": actions.DownloadReposCacheActionType,
+	"-S":        actions.EbuildSearchActionType,
+	"-search":   actions.EbuildSearchActionType,
 }
 
 func Start() {
@@ -57,8 +58,8 @@ func runWithGivenArgs(actionType actions.ActionType, arg string) {
 		utils.ExitWhite(usageStr)
 	}
 
-	err := action.Exec(os.Stdout, "")
+	err := action.Exec(os.Stdout, arg)
 	if err != nil {
-		panic(err)
+		utils.Exit(err.Error())
 	}
 }

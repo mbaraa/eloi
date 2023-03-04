@@ -7,7 +7,7 @@ import "io"
 type Action interface {
 	// Exec executes the selected action, and prints action's output on the given io.Writer
 	// or exits with an error
-	Exec(output io.Writer, args ...string) error
+	Exec(output io.Writer, args ...any) error
 
 	// NeedsRoot return true if the action needs root to be executed
 	NeedsRoot() bool
@@ -20,12 +20,15 @@ type ActionType int
 
 const (
 	DownloadReposCacheActionType ActionType = iota + 1
+	EbuildSearchActionType
 )
 
 func GetActionFactory(at ActionType) Action {
 	switch at {
 	case DownloadReposCacheActionType:
 		return new(DownloadReposCacheAction)
+	case EbuildSearchActionType:
+		return new(EbuildSearchAction)
 	default:
 		return nil
 	}
