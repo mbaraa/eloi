@@ -1,65 +1,64 @@
 package cmd
 
 import (
-	"flag"
 	"fmt"
+	"github.com/mbaraa/eloi/actions"
 	"os"
 
 	"github.com/mbaraa/eloi/utils"
 )
 
-var (
-	flags        = flag.NewFlagSet("Eloi", flag.ExitOnError)
-	meow         = new(bool)
-	download     = new(bool)
-	syncRepoName = new(string)
-	ebuildName   = new(string)
-	repoName     = new(string)
+const (
+	usageStr = `Usage of Eloi:
+  -S string
+        find ebuild to install
+  -download
+        download overlays repos cache
+  -enable string
+        add a specific repository
+  -meow
+        meow meow meow
+  -search string
+        find ebuild to install
+  -sync string
+        sync portage repos`
 )
 
+var argsActions = map[string]actions.ActionType{
+	"-download": actions.DownloadReposCacheActionType,
+}
+
 func Start() {
-	registerFlags()
-	flags.Parse(os.Args[1:])
-	runWithGivenArgs()
-}
-
-func runWithGivenArgs() {
-	if *meow {
-		fmt.Println("meow meow meow")
-	} else if *download {
-		utils.AssertRoot()
-		err := utils.DownloadReposCache()
-		if err != nil {
-			panic(err)
-		}
-	} else if len(*ebuildName) > 0 {
-		err := utils.LoadLocalOverlays()
-		if err != nil {
-			panic("Local repos are not synced, run with --sync to sync them")
-		}
-		utils.FindEbuild(*ebuildName)
-	} else if len(*repoName) > 0 {
-		utils.AssertRoot()
-		err := utils.AddOverlayRepo(*repoName)
-		if err != nil {
-			panic(err)
-		}
-	} else if len(*syncRepoName) > 0 {
-		utils.AssertRoot()
-		err := utils.Sync(*syncRepoName)
-		if err != nil {
-			panic(err)
-		}
-	} else {
-		flags.Usage()
+	if len(os.Args) < 2 {
+		utils.ExitWhite(usageStr)
 	}
+
+	actionType, ok := argsActions[os.Args[1]]
+	if !ok {
+		utils.ExitWhite(usageStr)
+	}
+
+	var arg string
+	if len(os.Args) > 2 {
+		arg = os.Args[2]
+	}
+
+	runWithGivenArgs(actionType, arg)
 }
 
-func registerFlags() {
-	flags.BoolVar(meow, "meow", false, "meow meow meow")
-	flags.BoolVar(download, "download", false, "download overlays repos cache")
-	flags.StringVar(ebuildName, "search", "", "find ebuild to install")
-	flags.StringVar(ebuildName, "S", "", "find ebuild to install")
-	flags.StringVar(repoName, "enable", "", "add a specific repository")
-	flags.StringVar(syncRepoName, "sync", "", "sync portage repos")
+func runWithGivenArgs(actionType actions.ActionType, arg string) {
+	action := actions.GetActionFactory(actionType)
+	if action.NeedsRoot() {
+		utils.AssertRoot()
+	}
+
+	if action.HasArgs() && len(arg) == 0 {
+		fmt.Println("this flag needs an argument")
+		utils.ExitWhite(usageStr)
+	}
+
+	err := action.Exec(os.Stdout, "")
+	if err != nil {
+		panic(err)
+	}
 }
