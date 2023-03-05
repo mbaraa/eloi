@@ -3,14 +3,14 @@ package actions
 import (
 	"errors"
 	"fmt"
-	"github.com/mbaraa/eloi/utils"
 	"io"
 	"os"
 	"os/exec"
-	"strings"
+
+	"github.com/mbaraa/eloi/cli/templates"
+	"github.com/mbaraa/eloi/utils"
 
 	"github.com/mbaraa/eloi/cli/cfmt"
-	"github.com/mbaraa/eloi/globals"
 	"github.com/mbaraa/eloi/models"
 )
 
@@ -22,7 +22,7 @@ type EbuildInstallAction struct {
 
 func (i *EbuildInstallAction) Exec(output io.Writer, args ...any) error {
 	i.output = output
-	return i.promptSelectPackage(args[0].([]PackageEntity))
+	return i.promptSelectPackage(args[0].([]models.Ebuild))
 }
 
 func (i *EbuildInstallAction) NeedsRoot() bool {
@@ -33,10 +33,18 @@ func (i *EbuildInstallAction) HasArgs() bool {
 	return false
 }
 
-func (i *EbuildInstallAction) promptSelectPackage(pkgs []PackageEntity) error {
+func (i *EbuildInstallAction) promptSelectPackage(pkgs []models.Ebuild) error {
 	if len(pkgs) == 0 {
 		return errors.New("no packages were found")
 	}
+
+	for index, ebuild := range pkgs {
+		_, err := i.output.Write([]byte(fmt.Sprintf("(%s) %s\n", cfmt.Magenta().Sprint(index+1), templates.EbuildTemplate(ebuild))))
+		if err != nil {
+			return err
+		}
+	}
+
 	prompt := cfmt.Green().Sprint("==>")
 	_, err := i.output.Write([]byte(fmt.Sprintf("%s Select a package to install\n%s ", prompt, prompt)))
 	if err != nil {
@@ -51,82 +59,46 @@ func (i *EbuildInstallAction) promptSelectPackage(pkgs []PackageEntity) error {
 	if selection-1 > len(pkgs) || selection-1 < 0 {
 		_, err = i.output.Write([]byte("there is nothing to do\n"))
 	} else {
-		err = i.listEbuildsForInstallation(globals.Ebuilds[pkgs[selection-1].FullName])
+		err = i.listEbuildsForInstallation(pkgs[selection-1])
 	}
 	return err
 }
 
-func (i *EbuildInstallAction) listEbuildsForInstallation(ebuild map[string]*models.Ebuild) error {
-	versions := make([]PackageEntity, 0)
+func (i *EbuildInstallAction) listEbuildsForInstallation(ebuild models.Ebuild) error {
+	selectedProviderIndex := 0
 
-	var name, group string
-	for _, details := range ebuild {
-		name, group = details.Name, details.GroupName
-		versions = append(versions, PackageEntity{
-			Display:  fmt.Sprintf("%s::%s", cfmt.Yellow().Sprint(details.Version), cfmt.Green().Sprint(details.OverlayName)),
-			FullName: fmt.Sprintf("%s#%s", details.Version, details.OverlayName),
-		})
-	}
-
-	reallySelected := ebuild[versions[0].FullName[:strings.Index(versions[0].FullName, "#")]]
-
-	if len(ebuild) > 1 {
+	if len(ebuild.ExtraData) > 1 {
 	selectVersion:
-		_, err := i.output.Write([]byte(fmt.Sprintf("\nthere are %s versions available of the package %s\n", cfmt.Yellow().Sprint(len(ebuild)), cfmt.Green().Sprint(group+"/"+name))))
-		if err != nil {
-			return err
-		}
-		for index, version := range versions {
-			_, err := i.output.Write([]byte(fmt.Sprintf("(%s) %s\n", cfmt.Magenta().Sprint(index+1), version.Display)))
-			if err != nil {
-				return err
-			}
+		_, _ = i.output.Write([]byte(fmt.Sprintf("there are %s versions available of the package %s\n",
+			cfmt.Yellow().Sprint(len(ebuild.ExtraData)),
+			cfmt.Green().Sprint(ebuild.FullName()))))
+
+		for index, provider := range ebuild.ExtraData {
+			_, _ = fmt.Fprintf(i.output, "(%s) %s\n",
+				cfmt.Magenta().Sprint(index+1),
+				fmt.Sprintf("%s::%s", cfmt.Yellow().Sprint(provider.Version), cfmt.Green().Sprint(provider.OverlayName)))
 		}
 
 		prompt := cfmt.Green().Sprint("==>")
-		_, err = i.output.Write([]byte(fmt.Sprintf("%s Select a version to install\n%s ", prompt, prompt)))
-		if err != nil {
-			return err
-		}
-		selection := 0
-		_, err = fmt.Scan(&selection)
-		if err != nil {
-			return err
-		}
+		_, _ = i.output.Write([]byte(fmt.Sprintf("%s Select a version to install\n%s ", prompt, prompt)))
+		_, _ = fmt.Scan(&selectedProviderIndex)
 
-		if selection-1 > len(versions) || selection-1 < 0 {
-			_, err = i.output.Write([]byte("invalid selection\n"))
-			if err != nil {
-				return err
-			}
+		if selectedProviderIndex-1 > len(ebuild.ExtraData) || selectedProviderIndex-1 < 0 {
+			_, _ = i.output.Write([]byte("invalid selection\n"))
 			goto selectVersion
-		}
-
-		selected := versions[selection-1]
-		version := selected.FullName[:strings.Index(selected.FullName, "#")]
-		overlay := selected.FullName[strings.Index(selected.FullName, "#")+1:]
-
-		ebuildVersions := globals.Ebuilds[group+"/"+name]
-
-		// TODO
-		// handle multiple overlays providers for the same version
-		for _version, ebuild := range ebuildVersions {
-			if version == _version && ebuild.OverlayName == overlay {
-				reallySelected = ebuild
-			}
 		}
 	}
 
-	return i.installEbuild(reallySelected)
+	return i.installEbuild(ebuild, selectedProviderIndex-1)
 }
 
-func (i *EbuildInstallAction) installEbuild(ebuild *models.Ebuild) error {
-	err := new(EnableRepoAction).Exec(i.output, ebuild.OverlayName)
+func (i *EbuildInstallAction) installEbuild(ebuild models.Ebuild, providerIndex int) error {
+	err := new(EnableRepoAction).Exec(i.output, ebuild.ExtraData[providerIndex].OverlayName)
 	if err != nil {
 		return err
 	}
 
-	err = utils.AcceptPackageLicense(*ebuild)
+	err = utils.AcceptPackageLicense(ebuild, providerIndex)
 	if err != nil {
 		return err
 	}
@@ -134,7 +106,8 @@ func (i *EbuildInstallAction) installEbuild(ebuild *models.Ebuild) error {
 	// TODO
 	// add license and flags enablers
 
-	c := exec.Command("emerge", "-qav", fmt.Sprintf("=%s/%s-%s::%s", ebuild.GroupName, ebuild.Name, ebuild.Version, ebuild.OverlayName))
+	c := exec.Command("emerge", "-qav", fmt.Sprintf("=%s-%s::%s",
+		ebuild.FullName(), ebuild.ExtraData[providerIndex].Version, ebuild.ExtraData[providerIndex].OverlayName))
 	c.Stdout = os.Stdout
 	c.Stdin = os.Stdin
 	c.Stderr = os.Stderr

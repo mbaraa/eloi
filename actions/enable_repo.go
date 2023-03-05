@@ -34,7 +34,7 @@ func (e *EnableRepoAction) Exec(output io.Writer, args ...any) error {
 		return err
 	}
 
-	overlay := models.Overlay{}
+	overlay := models.ServerOverlay{}
 	err = json.NewDecoder(resp.Body).Decode(&overlay)
 	if err != nil {
 		return err
@@ -59,14 +59,14 @@ func (e *EnableRepoAction) HasArgs() bool {
 	return true
 }
 
-func (e *EnableRepoAction) getRepoString(overlay models.Overlay) string {
+func (e *EnableRepoAction) getRepoString(overlay models.ServerOverlay) string {
 	sb := new(strings.Builder)
 
-	fmt.Fprintf(sb, "[%s]\n", overlay.Name)
-	fmt.Fprintf(sb, "location = /var/db/repos/%s\n", overlay.Name)
+	_, _ = fmt.Fprintf(sb, "[%s]\n", overlay.Name)
+	_, _ = fmt.Fprintf(sb, "location = /var/db/repos/%s\n", overlay.Name)
 	source := overlay.Source[0]
-	fmt.Fprintf(sb, "sync-type = %s\n", source.Type)
-	fmt.Fprintf(sb, "sync-uri = %s\n\n", source.Link)
+	_, _ = fmt.Fprintf(sb, "sync-type = %s\n", source.Type)
+	_, _ = fmt.Fprintf(sb, "sync-uri = %s\n\n", source.Link)
 
 	return sb.String()
 }

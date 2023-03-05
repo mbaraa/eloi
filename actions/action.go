@@ -1,6 +1,9 @@
 package actions
 
-import "io"
+import (
+	"github.com/mbaraa/eloi/db"
+	"io"
+)
 
 // Action is an operation that can be used when running the program
 // any implementation will be called directly from the command line
@@ -25,11 +28,16 @@ const (
 )
 
 func GetActionFactory(at ActionType) Action {
+	ebuildDB, err := db.GetEbuildDB()
+	if err != nil {
+		return nil
+	}
+
 	switch at {
 	case DownloadReposCacheActionType:
 		return new(DownloadReposCacheAction)
 	case EbuildSearchActionType:
-		return new(EbuildSearchAction)
+		return NewEbuildSearchAction(ebuildDB)
 	case EnableRepoActionType:
 		return new(EnableRepoAction)
 	default:

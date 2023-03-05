@@ -29,9 +29,9 @@ func AddPackageFlags(ebuildFullName, flags string) error {
 	return err
 }
 
-func AcceptPackageLicense(ebuild models.Ebuild) error {
+func AcceptPackageLicense(ebuild models.Ebuild, providerIndex int) error {
 	for _, license := range acceptedLicenses {
-		if strings.Contains(ebuild.License, license) {
+		if strings.Contains(ebuild.ExtraData[providerIndex].License, license) {
 			return nil
 		}
 	}
@@ -43,7 +43,7 @@ func AcceptPackageLicense(ebuild models.Ebuild) error {
 	}
 	defer licenseFile.Close()
 
-	_, err = fmt.Fprintf(licenseFile, "%s/%s %s\n", ebuild.GroupName, ebuild.Name, ebuild.License)
+	_, err = fmt.Fprintf(licenseFile, "%s %s\n", ebuild.FullName(), ebuild.ExtraData[providerIndex].License)
 	return err
 }
 
