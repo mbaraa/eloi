@@ -94,10 +94,11 @@ func (d *DownloadReposCacheAction) convertModelsAndPersist() error {
 		for version, ebuildsWithVersions := range versions {
 			if len(ebuild.Name) == 0 {
 				ebuild = models.Ebuild{
-					Name:      versions[version].Name,
-					GroupName: versions[version].GroupName,
-					Homepage:  versions[version].Homepage,
-					ExtraData: extraData,
+					Name:        versions[version].Name,
+					GroupName:   versions[version].GroupName,
+					Homepage:    versions[version].Homepage,
+					Description: versions[version].Description,
+					ExtraData:   extraData,
 				}
 			}
 			extraData = append(extraData, models.ExtraData{

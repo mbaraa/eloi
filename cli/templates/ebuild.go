@@ -28,10 +28,10 @@ func EbuildTemplate(ebuild models.Ebuild) string {
 		_, _ = cfmt.White().Fprintln(sb, ebuild.Homepage)
 	}
 
-	// if len(ebuild.Description) != 0 {
-	// 	_, _ = cfmt.Green().Bold().Fprintf(sb, "\tDescription: ")
-	// 	_, _ = cfmt.White().Fprintln(sb, ebuild.Description)
-	// }
+	if len(ebuild.Description) != 0 {
+		_, _ = cfmt.Green().Bold().Fprintf(sb, "\tDescription: ")
+		_, _ = cfmt.White().Fprintln(sb, ebuild.Description)
+	}
 
 	versions := new(strings.Builder)
 	overlays := new(strings.Builder)
