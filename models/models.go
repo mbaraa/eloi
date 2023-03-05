@@ -1,38 +1,44 @@
 package models
 
+import "gorm.io/gorm"
+
 type Overlay struct {
-	Owner struct {
-		Email string `json:"email"`
-		Name  string `json:"name"`
-		Type  string `json:"type"`
-	} `json:"owner"`
+	gorm.Model `json:"-"`
+	Id         uint `gorm:"primaryKey;autoIncrement"`
+	OwnerEmail string
+	OwnerName  string
+	OwnerType  string
 
-	Source []struct {
-		Type string `json:"type"`
-		Link string `json:"link"`
-	} `json:"source"`
+	SourceType string
+	SourceLink string
 
-	EbuildGroups map[string]*EbuildGroup `json:"ebuildGroups"`
-
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Homepage    string `json:"homepage"`
-	Feed        string `json:"feed"`
+	Name        string `gorm:"unique"`
+	Description string
+	Homepage    string
+	Feed        string
 }
 
-type EbuildGroup struct {
-	Ebuilds map[string]*Ebuild `json:"ebuilds"`
-	Name    string             `json:"name"`
-	Link    string             `json:"link"`
+type ExtraData struct {
+	gorm.Model   `json:"-"`
+	Id           uint `gorm:"primaryKey;autoIncrement"`
+	Version      string
+	OverlayName  string
+	Flags        string
+	License      string
+	Architecture string
+	EbuildID     uint
 }
 
 type Ebuild struct {
-	Name         string `json:"name"`
-	Version      string `json:"version"`
-	Homepage     string `json:"homepage"`
-	Flags        string `json:"flags"`
-	License      string `json:"license"`
-	OverlayName  string `json:"overlayName"`
-	GroupName    string `json:"groupName"`
-	Architecture string `json:"architecture"`
+	gorm.Model `json:"-"`
+	Id         uint `gorm:"primaryKey;autoIncrement"`
+	Name       string
+	GroupName  string
+	Homepage   string
+
+	ExtraData []ExtraData // version => providers overlays
+}
+
+func (e Ebuild) FullName() string {
+	return e.GroupName + "/" + e.Name
 }
