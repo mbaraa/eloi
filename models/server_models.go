@@ -35,4 +35,5 @@ type ServerEbuild struct {
 	OverlayName  string `json:"overlayName"`
 	GroupName    string `json:"groupName"`
 	Architecture string `json:"architecture"`
+	Description  string `json:"description"`
 }

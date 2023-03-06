@@ -30,11 +30,12 @@ type ExtraData struct {
 }
 
 type Ebuild struct {
-	gorm.Model `json:"-"`
-	Id         uint `gorm:"primaryKey;autoIncrement"`
-	Name       string
-	GroupName  string
-	Homepage   string
+	gorm.Model  `json:"-"`
+	Id          uint `gorm:"primaryKey;autoIncrement"`
+	Name        string
+	GroupName   string
+	Homepage    string
+	Description string `json:"description"`
 
 	ExtraData []ExtraData // version => providers overlays
 }
