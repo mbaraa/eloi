@@ -1,6 +1,7 @@
 package templates
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/mbaraa/eloi/cli/cfmt"
@@ -21,7 +22,7 @@ func EbuildTemplate(ebuild models.Ebuild) string {
 
 	_, _ = cfmt.Green().Fprint(sb, ebuild.GroupName)
 	_, _ = cfmt.White().Fprint(sb, "/")
-	_, _ = cfmt.White().Bold().Fprintln(sb, ebuild.Name)
+	_, _ = cfmt.White().Fprintln(sb, ebuild.Name)
 
 	if len(ebuild.Homepage) != 0 {
 		_, _ = cfmt.Green().Bold().Fprintf(sb, "\tHomepage: ")
@@ -33,21 +34,41 @@ func EbuildTemplate(ebuild models.Ebuild) string {
 		_, _ = cfmt.White().Fprintln(sb, ebuild.Description)
 	}
 
-	versions := new(strings.Builder)
-	overlays := new(strings.Builder)
-	for i, extraData := range ebuild.ExtraData {
-		_, _ = cfmt.Yellow().Fprint(versions, extraData.Version)
-		_, _ = cfmt.Yellow().Fprint(overlays, extraData.OverlayName)
-		if i < len(ebuild.ExtraData)-1 {
-			_, _ = cfmt.Yellow().Fprint(versions, ", ")
-			_, _ = cfmt.Yellow().Fprint(overlays, ", ")
+	versions := make(map[string]bool)
+	overlays := make(map[string]bool)
+	versionsStr := new(strings.Builder)
+	overlaysStr := new(strings.Builder)
+
+	for _, extraData := range ebuild.ExtraData {
+		if !versions[extraData.Version] {
+			_, _ = fmt.Fprint(versionsStr, extraData.Version)
+			_, _ = fmt.Fprint(versionsStr, ", ")
 		}
+
+		if !overlays[extraData.OverlayName] {
+			_, _ = fmt.Fprint(overlaysStr, extraData.OverlayName)
+			_, _ = fmt.Fprint(overlaysStr, ", ")
+		}
+
+		versions[extraData.Version] = true
+		overlays[extraData.OverlayName] = true
 	}
 
 	_, _ = cfmt.Green().Bold().Fprintf(sb, "\tAvailable Overlays: ")
-	_, _ = cfmt.Yellow().Fprintln(sb, overlays.String())
+	_, _ = cfmt.Yellow().Fprintln(sb, removeTrailingCommaSpace(overlaysStr.String()))
+
 	_, _ = cfmt.Green().Bold().Fprintf(sb, "\tAvailable Versions: ")
-	_, _ = cfmt.Yellow().Fprintln(sb, versions.String())
+	_, _ = cfmt.Yellow().Fprintln(sb, removeTrailingCommaSpace(versionsStr.String()))
 
 	return sb.String()
+}
+
+func removeTrailingCommaSpace(s string) string {
+	if len(s) < 2 {
+		return ""
+	}
+	if s[len(s)-2:] == ", " {
+		return s[:len(s)-2]
+	}
+	return s
 }
