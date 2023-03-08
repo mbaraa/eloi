@@ -7,10 +7,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/mbaraa/eloi/cli/templates"
-	"github.com/mbaraa/eloi/utils"
-
 	"github.com/mbaraa/eloi/cli/cfmt"
+	"github.com/mbaraa/eloi/cli/templates"
 	"github.com/mbaraa/eloi/models"
 )
 
@@ -65,7 +63,7 @@ func (i *EbuildInstallAction) promptSelectPackage(pkgs []models.Ebuild) error {
 }
 
 func (i *EbuildInstallAction) listEbuildsForInstallation(ebuild models.Ebuild) error {
-	selectedProviderIndex := 0
+	selectedProviderIndex := 1
 
 	if len(ebuild.ExtraData) > 1 {
 	selectVersion:
@@ -98,7 +96,7 @@ func (i *EbuildInstallAction) installEbuild(ebuild models.Ebuild, providerIndex 
 		return err
 	}
 
-	err = utils.AcceptPackageLicense(ebuild, providerIndex)
+	err = NewLicenceUnmaskAction().Exec(i.output, ebuild, providerIndex)
 	if err != nil {
 		return err
 	}
