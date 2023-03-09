@@ -91,7 +91,7 @@ func (i *EbuildInstallAction) listEbuildsForInstallation(ebuild models.Ebuild) e
 }
 
 func (i *EbuildInstallAction) installEbuild(ebuild models.Ebuild, providerIndex int) error {
-	err := new(EnableRepoAction).Exec(i.output, ebuild.ExtraData[providerIndex].OverlayName)
+	err := NewEnableRepoForPackageAction().Exec(i.output, ebuild, providerIndex)
 	if err != nil {
 		return err
 	}
