@@ -1,49 +1,25 @@
 #include "./depgraph.h"
+#include <stdlib.h>
+#include <string.h>
 
-const char *stmt_pre_pkg_name = "from gentoolkit.dependencies import "
-                                "Dependencies; result = [dep.__str__() "
-                                "for dep in Dependencies('";
-const char *stmt_post_pkg_name = "').get_all_depends()]";
-PyObject *globals, *locals, *result;
+const char *get_deps_stmt_format =
+    "from gentoolkit.dependencies import "
+    "Dependencies; result = [dep.__str__() "
+    "for dep in Dependencies('%s').get_all_depends()]";
+PyObject *globals, *locals;
 
-void cleanup() {
-  if (result != NULL)
-    Py_DECREF(result);
-  if (result != NULL)
-    Py_DECREF(locals);
-  if (result != NULL)
-    Py_DECREF(globals);
-  Py_Finalize();
+char *get_stmt_with_pkg_name(const char *pkg_name) {
+  char *res = malloc(strlen(get_deps_stmt_format) + strlen(pkg_name));
+  sprintf(res, get_deps_stmt_format, pkg_name);
+  return res;
 }
 
-char **get_pkg_depgraph(const char *pkg_name) {
-  Py_Initialize();
-
-  const int stmt_len =
-      strlen(stmt_pre_pkg_name) + strlen(stmt_post_pkg_name) + strlen(pkg_name);
-  char stmt[stmt_len];
-
-  strcat(stmt, stmt_pre_pkg_name);
-  strcat(stmt, pkg_name);
-  strcat(stmt, stmt_post_pkg_name);
-
-  globals = PyDict_New();
-  locals = PyDict_New();
-  result = PyRun_String(stmt, Py_file_input, globals, locals);
-
-  if (result == NULL)
-    return NULL;
-
-  PyObject *value = PyDict_GetItem(locals, PyUnicode_FromString("result"));
-
-  if (value == NULL)
-    return NULL;
-
-  int size = PyList_Size(value);
+char **get_deps_from_python_result(PyObject *result) {
+  int size = PyList_Size(result);
   char **deps = (char **)malloc((size + 1) * sizeof(char *));
 
   for (int i = 0; i < size; i++) {
-    PyObject *item = PyList_GetItem(value, i);
+    PyObject *item = PyList_GetItem(result, i);
 
     if (PyUnicode_Check(item)) {
       char *dep = (char *)PyUnicode_AsUTF8(item);
@@ -54,4 +30,28 @@ char **get_pkg_depgraph(const char *pkg_name) {
   deps[size] = NULL;
 
   return deps;
+}
+
+char **get_pkg_depgraph(const char *pkg_name) {
+  Py_Initialize();
+
+  globals = PyDict_New();
+  locals = PyDict_New();
+  PyRun_String(get_stmt_with_pkg_name(pkg_name), Py_file_input, globals,
+               locals);
+
+  PyObject *result = PyDict_GetItem(locals, PyUnicode_FromString("result"));
+
+  if (result == NULL)
+    return NULL;
+
+  return get_deps_from_python_result(result);
+}
+
+void cleanup() {
+  if (locals != NULL)
+    Py_DECREF(locals);
+  if (globals != NULL)
+    Py_DECREF(globals);
+  Py_Finalize();
 }
