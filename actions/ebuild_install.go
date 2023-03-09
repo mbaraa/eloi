@@ -102,7 +102,11 @@ func (i *EbuildInstallAction) installEbuild(ebuild models.Ebuild, providerIndex 
 	}
 
 	// TODO
-	// add license and flags enablers
+	// add option for enabling use flags always for an ebuild, or just for the current install
+	err = NewFlagsUnmaskAction().Exec(i.output, ebuild, providerIndex)
+	if err != nil {
+		return err
+	}
 
 	c := exec.Command("emerge", "-qav", fmt.Sprintf("=%s-%s::%s",
 		ebuild.FullName(), ebuild.ExtraData[providerIndex].Version, ebuild.ExtraData[providerIndex].OverlayName))
