@@ -3,8 +3,9 @@
 
 #include <python3.10/Python.h>
 #include <string.h>
+#include <stdlib.h>
 
-const char *get_pkg_depgraph(const char *pkg_name);
+char **get_pkg_depgraph(const char *pkg_name);
 void cleanup();
 
 #endif

@@ -28,11 +28,23 @@ func fixDepsVersions(deps []string) []string {
 func getDepgraph(pkg string) []string {
 	pkgName := C.CString(pkg)
 	defer C.free(unsafe.Pointer(pkgName))
-	deps := C.get_pkg_depgraph(pkgName)
-	depsStr := C.GoString(deps)
-	C.cleanup()
+	defer C.cleanup()
 
-	return strings.Split(depsStr, " ")
+	depsPtr := C.get_pkg_depgraph(pkgName)
+	if depsPtr == nil {
+		return []string{}
+	}
+	defer C.free(unsafe.Pointer(depsPtr))
+	deps := make([]string, 0)
+	for i := 0; ; i++ {
+		dep := *(**C.char)(unsafe.Pointer(uintptr(unsafe.Pointer(depsPtr)) + uintptr(i)*unsafe.Sizeof(*depsPtr)))
+		if dep == nil {
+			break
+		}
+		deps = append(deps, C.GoString(dep))
+	}
+
+	return deps
 }
 
 func removeDuplicates(s []string) []string {
