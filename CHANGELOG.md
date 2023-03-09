@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Flag unmask action
+- License unmask action
+- C wrapper to [gentoolkit](https://wiki.gentoo.org/wiki/Gentoolkit) to get packages' dependencies in the less hacky way
+- Add repo required by a package action
+
+### Changed
+
+- Adding a repo while installing a package, where this action masks all packages from the new repo to avoid dependencies conflicts
 
 ## \[[v0.2](https://github.com/mbaraa/eloi/releases/tag/v0.2)\] 2023-03-06
 

@@ -12,6 +12,12 @@ Eloi's [server](https://github.com/mbaraa/eloi-server) just scrapes over Zugania
 - Enable ebuild overlays
 - more in the future...
 
+## Dependencies:
+
+- [gentoo system](https://gentoo.org) -- duh
+- [gentoolkit](https://wiki.gentoo.org/wiki/Gentoolkit)
+- [python3.10](https://wiki.gentoo.org/wiki/Python) -- install python3.10 
+
 ## Installation:
 
 ### Using Portage
