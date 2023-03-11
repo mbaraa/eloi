@@ -1,9 +1,12 @@
 package actions
 
 import (
+	"fmt"
 	"io"
+	"strings"
 
 	"github.com/mbaraa/eloi/db"
+	"github.com/mbaraa/eloi/models"
 )
 
 var _ Action = new(EbuildSearchAction)
@@ -33,10 +36,23 @@ func (s *EbuildSearchAction) HasArgs() bool {
 }
 
 func (s *EbuildSearchAction) findEbuild(name string) error {
-	name = "%" + name + "%"
-	result, err := s.ebuildDB.GetByConds("name like ? OR group_name like ?", name, name)
+	var err error
+	var result []models.Ebuild
+
+	if slashIndex := strings.Index(name, "/"); slashIndex != -1 {
+		groupName := name[:slashIndex]
+		name = name[slashIndex+1:]
+		result, err = s.ebuildDB.GetByConds("name like ? AND group_name like ?", likeQuery(name), likeQuery(groupName))
+	} else {
+		result, err = s.ebuildDB.GetByConds("name like ? OR group_name like ?", likeQuery(name), likeQuery(name))
+	}
 	if err != nil {
 		return err
 	}
+
 	return new(EbuildInstallAction).Exec(s.output, result)
+}
+
+func likeQuery(s string) string {
+	return fmt.Sprintf("%%%s%%", s)
 }
