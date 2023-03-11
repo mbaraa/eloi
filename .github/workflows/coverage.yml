@@ -16,4 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: generate coverage
-        run: go test ./... -race -covermode=atomic
+        run: | 
+          go get .
+          go test ./... -race -covermode=atomic
