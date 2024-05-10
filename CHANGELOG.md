@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - License unmask action
 - C wrapper to [gentoolkit](https://wiki.gentoo.org/wiki/Gentoolkit) to get packages' dependencies in the less hacky way
 - Add repo required by a package action
+- Update server's url
 
 ### Changed
 
