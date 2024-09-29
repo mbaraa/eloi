@@ -1,7 +1,7 @@
 #ifndef DEPGRAPH_GO
 #define DEPGRAPH_GO
 
-#include <python3.11/Python.h>
+#include <python3.12/Python.h>
 #include <stdlib.h>
 #include <string.h>
 

@@ -1,6 +1,4 @@
 #include "./depgraph.h"
-#include <stdlib.h>
-#include <string.h>
 
 const char *get_deps_stmt_format =
     "from gentoolkit.dependencies import "
