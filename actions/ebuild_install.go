@@ -6,6 +6,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"slices"
 
 	"github.com/mbaraa/eloi/cli/cfmt"
 	"github.com/mbaraa/eloi/cli/templates"
@@ -36,8 +37,14 @@ func (i *EbuildInstallAction) promptSelectPackage(pkgs []models.Ebuild) error {
 		return errors.New("no packages were found")
 	}
 
-	for index, ebuild := range pkgs {
-		_, err := i.output.Write([]byte(fmt.Sprintf("(%s) %s\n", cfmt.Magenta().Sprint(index+1), templates.EbuildTemplate(ebuild))))
+	slices.Reverse(pkgs)
+	for idx := len(pkgs) - 1; idx >= 0; idx-- {
+		_, err := i.output.Write([]byte(
+			fmt.Sprintf("(%s) %s\n",
+				cfmt.Magenta().Sprint(idx+1),
+				templates.EbuildTemplate(pkgs[idx]),
+			),
+		))
 		if err != nil {
 			return err
 		}
