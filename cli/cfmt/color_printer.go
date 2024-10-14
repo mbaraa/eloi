@@ -76,9 +76,9 @@ func (c *colorPrinter) magenta() stylerBackgroundSetter { c.color = "35;"; retur
 func (c *colorPrinter) cyan() stylerBackgroundSetter    { c.color = "36;"; return c }
 func (c *colorPrinter) white() stylerBackgroundSetter   { c.color = "97;"; return c }
 
-func (c *colorPrinter) Bold() stylerBackgroundSetter      { c.option += "1;"; return c }
-func (c *colorPrinter) Underline() stylerBackgroundSetter { c.option += "4;"; return c }
-func (c *colorPrinter) Inverse() stylerBackgroundSetter   { c.option += "7;"; return c }
+func (c *colorPrinter) Bold() stylerBackgroundSetter      { c.option = "1;"; return c }
+func (c *colorPrinter) Underline() stylerBackgroundSetter { c.option = "4;"; return c }
+func (c *colorPrinter) Inverse() stylerBackgroundSetter   { c.option = "7;"; return c }
 func (c *colorPrinter) Reset() stylerBackgroundSetter {
 	c.option = "0"
 	c.color = ""
@@ -96,39 +96,39 @@ func (c *colorPrinter) CyanBG() textStyler    { c.background = "46"; return c }
 func (c *colorPrinter) WhiteBG() textStyler   { c.background = "47"; return c }
 
 func (c *colorPrinter) Print(args ...any) (n int, err error) {
-	return c.Fprint(os.Stdin, args...)
+	return c.Fprint(os.Stdin, c.Sprint(args...))
 }
 
 func (c *colorPrinter) Println(args ...any) (n int, err error) {
-	return c.Fprintln(os.Stdin, args...)
+	return c.Fprintln(os.Stdin, c.Sprint(args...))
 }
 
 func (c *colorPrinter) Printf(format string, args ...any) (n int, err error) {
-	return c.Fprintf(os.Stdin, format, args...)
+	return c.Fprintf(os.Stdin, c.Sprintf(format, args...))
 }
 
 func (c *colorPrinter) Fprintf(w io.Writer, format string, args ...any) (n int, err error) {
-	return fmt.Fprintf(w, c.prepareSettings(format), args...)
+	return fmt.Fprintf(w, c.Sprintf(format, args...))
 }
 
 func (c *colorPrinter) Fprint(w io.Writer, args ...any) (n int, err error) {
-	return fmt.Fprint(w, c.prepareSettings(fmt.Sprint(args...)))
+	return fmt.Fprint(w, c.Sprint(args...))
 }
 
 func (c *colorPrinter) Fprintln(w io.Writer, args ...any) (n int, err error) {
-	return fmt.Fprintln(w, c.prepareSettings(fmt.Sprint(args...)))
+	return fmt.Fprintln(w, c.Sprint(args...))
 }
 
 func (c *colorPrinter) Sprintf(format string, args ...any) string {
-	return fmt.Sprintf(c.prepareSettings(format), args...)
+	return c.prepareSettings(fmt.Sprintf(format, args...))
 }
 
 func (c *colorPrinter) Sprint(args ...any) string {
-	return fmt.Sprint(c.prepareSettings(fmt.Sprint(args...)))
+	return c.prepareSettings(fmt.Sprint(args...))
 }
 
 func (c *colorPrinter) Sprintln(args ...any) string {
-	return fmt.Sprintln(c.prepareSettings(fmt.Sprint(args...)))
+	return c.prepareSettings(fmt.Sprintln(args...))
 }
 
 func (c *colorPrinter) prepareSettings(text string) string {
@@ -139,6 +139,7 @@ func (c *colorPrinter) prepareSettings(text string) string {
 		c.option = c.option[:len(c.option)-1]
 	}
 
+	defer c.Reset()
 	return "\033[" + c.option + c.color + c.background + "m" + text + "\033[0m"
 }
 
