@@ -1,12 +1,13 @@
 package db
 
 import (
+	"os"
+
 	"github.com/mbaraa/eloi/globals"
 	"github.com/mbaraa/eloi/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"os"
 )
 
 const EloiDBPath = globals.CacheDirectory + "eloi.db"
@@ -14,6 +15,9 @@ const EloiDBPath = globals.CacheDirectory + "eloi.db"
 var instance *gorm.DB = nil
 
 func GetInstance() (*gorm.DB, error) {
+	if _, err := os.Stat(globals.CacheDirectory); !os.IsExist(err) {
+		_ = os.Mkdir(globals.CacheDirectory, 0755)
+	}
 	if _, err := os.Stat(EloiDBPath); instance == nil || err != nil {
 		var err error
 		instance, err = gorm.Open(sqlite.Open(EloiDBPath), &gorm.Config{
