@@ -1,8 +1,8 @@
 package depgraph
 
-// ldflags was generated using python3.12-config --ldflags --embed
+// ldflags was generated using python3.13-config --ldflags --embed
 
-// #cgo LDFLAGS: -L/usr/lib64 -lpython3.12 -ldl  -lm
+// #cgo LDFLAGS: -L/usr/lib64 -lpython3.13 -ldl  -lm
 // #include "./depgraph.h"
 import "C"
 import (
