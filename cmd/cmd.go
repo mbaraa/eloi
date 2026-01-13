@@ -45,7 +45,11 @@ func Start() {
 }
 
 func runWithGivenArgs(actionType actions.ActionType, arg string) {
-	action := actions.GetActionFactory(actionType)
+	action, err := actions.GetActionFactory(actionType)
+
+	if err != nil {
+		utils.Exit(fmt.Errorf("cmd.runWithGivenArgs: %w", err).Error())
+	}
 	if action.NeedsRoot() {
 		utils.AssertRoot()
 	}
@@ -55,7 +59,7 @@ func runWithGivenArgs(actionType actions.ActionType, arg string) {
 		utils.ExitWhite(usageStr)
 	}
 
-	err := action.Exec(os.Stdout, arg)
+	err = action.Exec(os.Stdout, arg)
 	if err != nil {
 		utils.Exit(err.Error())
 	}

@@ -1,9 +1,14 @@
 package actions
 
 import (
-	"github.com/mbaraa/eloi/db"
+	"errors"
+	"fmt"
 	"io"
+
+	"github.com/mbaraa/eloi/db"
 )
+
+var ErrUnknownActionType = errors.New("unknown action type")
 
 // Action is an operation that can be used when running the program
 // any implementation will be called directly from the command line
@@ -27,20 +32,20 @@ const (
 	EnableRepoActionType
 )
 
-func GetActionFactory(at ActionType) Action {
+func GetActionFactory(at ActionType) (Action, error) {
 	ebuildDB, err := db.GetEbuildDB()
 	if err != nil {
-		return nil
+		return nil, fmt.Errorf("action.GetActionFactory: couldn't get ebuild DB: %w", err)
 	}
 
 	switch at {
 	case DownloadReposCacheActionType:
-		return new(DownloadReposCacheAction)
+		return new(DownloadReposCacheAction), nil
 	case EbuildSearchActionType:
-		return NewEbuildSearchAction(ebuildDB)
+		return NewEbuildSearchAction(ebuildDB), nil
 	case EnableRepoActionType:
-		return new(EnableRepoAction)
+		return new(EnableRepoAction), nil
 	default:
-		return nil
+		return nil, fmt.Errorf("%d: %w", at, ErrUnknownActionType)
 	}
 }
