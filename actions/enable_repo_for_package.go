@@ -107,7 +107,7 @@ func (e *EnableRepoForPackageAction) unmaskDeps() error {
 			dep = dep[:strings.Index(dep, "[")]
 		}
 		// Skip deps already installed from another repo to avoid conflicts
-		if isInstalledFromOtherRepo(dep, overlayName) {
+		if isInstalledFromOtherRepo(e.ebuild.GroupName, e.ebuild.Name, overlayName) {
 			continue
 		}
 		_, _ = fmt.Fprintf(unmaskFile, "%s::%s\n", dep, overlayName)
@@ -117,42 +117,11 @@ func (e *EnableRepoForPackageAction) unmaskDeps() error {
 }
 
 // isInstalledFromOtherRepo checks if a package is installed from a repo other than the given overlay
-func isInstalledFromOtherRepo(dep, overlayName string) bool {
-	// Extract package name (remove version operators like >=, =, etc.)
-	pkgName := strings.TrimLeft(dep, ">=<~!")
-	if idx := strings.LastIndex(pkgName, "-"); idx > 0 {
-		// Check if what follows is a version number
-		rest := pkgName[idx+1:]
-		if len(rest) > 0 && rest[0] >= '0' && rest[0] <= '9' {
-			pkgName = pkgName[:idx]
-		}
-	}
-
-	// Check /var/db/pkg for installed packages
-	parts := strings.SplitN(pkgName, "/", 2)
-	if len(parts) != 2 {
-		return false
-	}
-	pkgDir := "/var/db/pkg/" + parts[0]
-	entries, err := os.ReadDir(pkgDir)
+func isInstalledFromOtherRepo(groupName, pkgName, overlayName string) bool {
+	data, err := os.ReadFile(fmt.Sprintf("/var/db/pkg/%s/%s/repository", groupName, pkgName))
 	if err != nil {
 		return false
 	}
-
-	for _, entry := range entries {
-		if !entry.IsDir() || !strings.HasPrefix(entry.Name(), parts[1]) {
-			continue
-		}
-		// Check repo file to see which repo it's from
-		repoFile := pkgDir + "/" + entry.Name() + "/repository"
-		data, err := os.ReadFile(repoFile)
-		if err != nil {
-			continue
-		}
-		repo := strings.TrimSpace(string(data))
-		if repo != "" && repo != overlayName {
-			return true // Installed from different repo, skip overlay version
-		}
-	}
-	return false
+	repo := strings.TrimSpace(string(data))
+	return repo != "" && repo != overlayName
 }
