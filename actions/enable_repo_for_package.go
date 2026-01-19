@@ -2,11 +2,12 @@ package actions
 
 import (
 	"fmt"
-	"github.com/mbaraa/eloi/models"
-	"github.com/mbaraa/eloi/utils/gentoolkit/depgraph"
 	"io"
 	"os"
 	"strings"
+
+	"github.com/mbaraa/eloi/models"
+	"github.com/mbaraa/eloi/utils/gentoolkit/depgraph"
 )
 
 var _ Action = new(EnableRepoForPackageAction)
@@ -100,12 +101,25 @@ func (e *EnableRepoForPackageAction) unmaskDeps() error {
 
 	deps := depgraph.GetDeps(e.ebuild.FullName() + "-" + e.ebuild.ExtraData[e.providerIndex].Version)
 	_, _ = fmt.Fprintf(unmaskFile, "# dependency for %s\n", e.ebuild.FullName()+"-"+e.ebuild.ExtraData[e.providerIndex].Version)
+	overlayName := e.ebuild.ExtraData[e.providerIndex].OverlayName
 	for _, dep := range deps {
 		if strings.Contains(dep, "[") {
 			dep = dep[:strings.Index(dep, "[")]
 		}
-		_, _ = fmt.Fprintf(unmaskFile, "%s::%s\n", dep, e.ebuild.ExtraData[e.providerIndex].OverlayName)
+		if isInstalledFromOtherRepo(e.ebuild.GroupName, e.ebuild.Name, overlayName) {
+			continue
+		}
+		_, _ = fmt.Fprintf(unmaskFile, "%s::%s\n", dep, overlayName)
 	}
 
 	return nil
+}
+
+func isInstalledFromOtherRepo(groupName, pkgName, overlayName string) bool {
+	data, err := os.ReadFile(fmt.Sprintf("/var/db/pkg/%s/%s/repository", groupName, pkgName))
+	if err != nil {
+		return false
+	}
+	repo := strings.TrimSpace(string(data))
+	return repo != "" && repo != overlayName
 }
