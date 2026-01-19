@@ -106,7 +106,6 @@ func (e *EnableRepoForPackageAction) unmaskDeps() error {
 		if strings.Contains(dep, "[") {
 			dep = dep[:strings.Index(dep, "[")]
 		}
-		// Skip deps already installed from another repo to avoid conflicts
 		if isInstalledFromOtherRepo(e.ebuild.GroupName, e.ebuild.Name, overlayName) {
 			continue
 		}
@@ -116,7 +115,6 @@ func (e *EnableRepoForPackageAction) unmaskDeps() error {
 	return nil
 }
 
-// isInstalledFromOtherRepo checks if a package is installed from a repo other than the given overlay
 func isInstalledFromOtherRepo(groupName, pkgName, overlayName string) bool {
 	data, err := os.ReadFile(fmt.Sprintf("/var/db/pkg/%s/%s/repository", groupName, pkgName))
 	if err != nil {
