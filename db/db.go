@@ -1,7 +1,6 @@
 package db
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/mbaraa/eloi/globals"
@@ -16,13 +15,8 @@ const EloiDBPath = globals.CacheDirectory + "eloi.db"
 var instance *gorm.DB = nil
 
 func GetInstance() (*gorm.DB, error) {
-	if _, err := os.Stat(globals.CacheDirectory); !os.IsExist(err) {
-		err = os.Mkdir(globals.CacheDirectory, 0755)
-
-		if err != nil {
-			return nil, fmt.Errorf("db.GetInstance: couldn't create directory: %w", err)
-		}
-	}
+	// error is ignored in case the directory exists
+	_ = os.Mkdir(globals.CacheDirectory, 0755)
 
 	if _, err := os.Stat(EloiDBPath); instance == nil || err != nil {
 		var err error
