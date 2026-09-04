@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mbaraa/eloi/cmd"
+	"codeberg.org/lordbaraa/eloi/cmd"
 )
 
 func main() {

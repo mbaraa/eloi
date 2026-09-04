@@ -5,8 +5,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/mbaraa/eloi/db"
-	"github.com/mbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/db"
+	"codeberg.org/lordbaraa/eloi/models"
 )
 
 var _ Action = new(EbuildSearchAction)

@@ -2,7 +2,7 @@ package db
 
 import (
 	"errors"
-	"github.com/mbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/models"
 	"gorm.io/gorm"
 )
 

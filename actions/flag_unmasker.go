@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mbaraa/eloi/cli/cfmt"
-	"github.com/mbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/cli/cfmt"
+	"codeberg.org/lordbaraa/eloi/models"
 )
 
 type FlagsUnmaskAction struct {

@@ -5,13 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## \[[v0.3.1](https://github.com/mbaraa/eloi/releases/tag/v0.3.1)\] 2024-10-23
+## \[[v0.3.1](https://codeberg.org/lordbaraa/eloi/releases/tag/v0.3.1)\] 2024-10-23
 
 ### Fixed
 
 - Check for cache directory before synchronizing the local repos.
 
-## \[[v0.3](https://github.com/mbaraa/eloi/releases/tag/v0.3)\] 2024-10-15
+## \[[v0.3](https://codeberg.org/lordbaraa/eloi/releases/tag/v0.3)\] 2024-10-15
 
 ### Added
 
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `cfmt` options resetting
 
-## \[[v0.2](https://github.com/mbaraa/eloi/releases/tag/v0.2)\] 2023-03-06
+## \[[v0.2](https://codeberg.org/lordbaraa/eloi/releases/tag/v0.2)\] 2023-03-06
 
 ### Added
 
@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - color output, added a wrapper that sets output's color, style, and background
 
-## \[[v0.1.1](https://github.com/mbaraa/eloi/releases/tag/v0.1.1)\] - 2023-02-18
+## \[[v0.1.1](https://codeberg.org/lordbaraa/eloi/releases/tag/v0.1.1)\] - 2023-02-18
 
 ### Fixed
 
@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - duplicate packages search results
 - synchronizing repos
 
-## \[[v0.1](https://github.com/mbaraa/eloi/releases/tag/v0.1)\] - 2023-02-01
+## \[[v0.1](https://codeberg.org/lordbaraa/eloi/releases/tag/v0.1)\] - 2023-02-01
 
 ### Added
 

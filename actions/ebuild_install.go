@@ -8,9 +8,9 @@ import (
 	"os/exec"
 	"slices"
 
-	"github.com/mbaraa/eloi/cli/cfmt"
-	"github.com/mbaraa/eloi/cli/templates"
-	"github.com/mbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/cli/cfmt"
+	"codeberg.org/lordbaraa/eloi/cli/templates"
+	"codeberg.org/lordbaraa/eloi/models"
 )
 
 var _ Action = new(EbuildInstallAction)

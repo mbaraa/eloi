@@ -1,4 +1,4 @@
-module github.com/mbaraa/eloi
+module codeberg.org/lordbaraa/eloi
 
 go 1.21
 

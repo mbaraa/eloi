@@ -3,7 +3,7 @@ package utils
 import (
 	"os"
 
-	"github.com/mbaraa/eloi/cli/cfmt"
+	"codeberg.org/lordbaraa/eloi/cli/cfmt"
 )
 
 func Exit(msg string) {

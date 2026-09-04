@@ -9,9 +9,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/mbaraa/eloi/config"
-	"github.com/mbaraa/eloi/globals"
-	"github.com/mbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/config"
+	"codeberg.org/lordbaraa/eloi/globals"
+	"codeberg.org/lordbaraa/eloi/models"
 )
 
 var _ Action = new(EnableRepoAction)

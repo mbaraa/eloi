@@ -3,8 +3,8 @@ package db
 import (
 	"os"
 
-	"github.com/mbaraa/eloi/globals"
-	"github.com/mbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/globals"
+	"codeberg.org/lordbaraa/eloi/models"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

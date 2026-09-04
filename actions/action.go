@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/mbaraa/eloi/db"
+	"codeberg.org/lordbaraa/eloi/db"
 )
 
 var ErrUnknownActionType = errors.New("unknown action type")

@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mbaraa/eloi/models"
-	"github.com/mbaraa/eloi/utils/gentoolkit/depgraph"
+	"codeberg.org/lordbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/utils/gentoolkit/depgraph"
 )
 
 var _ Action = new(EnableRepoForPackageAction)

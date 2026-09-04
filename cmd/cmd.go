@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/mbaraa/eloi/actions"
+	"codeberg.org/lordbaraa/eloi/actions"
 	"os"
 
-	"github.com/mbaraa/eloi/utils"
+	"codeberg.org/lordbaraa/eloi/utils"
 )
 
 const (

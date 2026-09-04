@@ -2,8 +2,8 @@ package actions
 
 import (
 	"encoding/json"
-	"github.com/mbaraa/eloi/db"
-	"github.com/mbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/db"
+	"codeberg.org/lordbaraa/eloi/models"
 	"gorm.io/gorm"
 	"io"
 	"net/http"
@@ -11,8 +11,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mbaraa/eloi/config"
-	"github.com/mbaraa/eloi/globals"
+	"codeberg.org/lordbaraa/eloi/config"
+	"codeberg.org/lordbaraa/eloi/globals"
 )
 
 var _ Action = new(DownloadReposCacheAction)

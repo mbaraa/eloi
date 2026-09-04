@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mbaraa/eloi/cli/cfmt"
+	"codeberg.org/lordbaraa/eloi/cli/cfmt"
 
-	"github.com/mbaraa/eloi/models"
+	"codeberg.org/lordbaraa/eloi/models"
 )
 
 func EbuildTemplate(ebuild models.Ebuild) string {

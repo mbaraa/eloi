@@ -1,11 +1,10 @@
 # Eloi
 
-[![GoDoc](https://godoc.org/github.com/mbaraa/eloi?status.png)](https://godoc.org/github.com/mbaraa/eloi)
-[![Go Report Card](https://goreportcard.com/badge/github.com/mbaraa/eloi)](https://goreportcard.com/report/github.com/mbaraa/eloi)
+[![GoDoc](https://godoc.org/codeberg.org/lordbaraa/eloi?status.png)](https://godoc.org/codeberg.org/lordbaraa/eloi)
 
 A Gentoo ebuilds searcher and installer ([eix](https://wiki.gentoo.org/wiki/Eix) with extra steps). Searches through all Gentoo's overlays provided by [Layman](https://wiki.gentoo.org/wiki/Layman) and listed by Zugania's [website](http://gpo.zugaina.org/).
 
-Eloi's [server](https://github.com/mbaraa/eloi-server) just scrapes over Zugania's website and provides a list of overlays to be used by the CLI client.
+Eloi's [server](https://codeberg.org/lordbaraa/eloiserver) just scrapes over Zugania's website and provides a list of overlays to be used by the CLI client.
 
 ---
 
@@ -25,13 +24,13 @@ Eloi's [server](https://github.com/mbaraa/eloi-server) just scrapes over Zugania
 
 ### Using Portage
 
-1. Add my [overlay](https://github.com/mbaraa/mbaraa-overlay) 🥰
+1. Add my [overlay](https://codeberg.org/lordbaraa/gentoo-overlay) 🥰
 2. Install `app-portage/eloi` using emerge
 
 ### Using Go's installer
 
 ```bash
-go install github.com/mbaraa/eloi@latest
+go install codeberg.org/lordbaraa/eloi@latest
 ```
 
 ## Usage:
